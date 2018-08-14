@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+ <html>
+   <head>
+     <!--Import Google Icon Font-->
+     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+     <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+    <link rel="stylesheet" href="/assets/prism.css">
+
+     <!--Let browser know website is optimized for mobile-->
+     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+     <title>Materialized Sandbox</title>
+   </head>
+
+<!-- TODO: Materialized Project 1 -->
+   <body>
+     <div class="container">
+       <div class="header red white-text">
+         <div class="row center-align" style="padding: 0;">
+           <div class="col s2 red darken-3" style="padding-top: 10px; padding-bottom: 17px;">
+             <button onclick="window.history.back();" style="color: white; background: none; border: none; cursor: pointer;">  <i class="material-icons" style="font-size: 50px;">arrow_back</i></button>
+           </div>
+           <div class="col s8 red" style=" padding-bottom: 10px;">
+             <h4>RESPONSE</h4>
+               <!-- <h4>RESPONSE <a href="../result.json" download> <i class="material-icons" style="color: white; padding: 5px;">cloud_download</i></a></h4> -->
+           </div>
+           <div class="col s2 red darken-3" style=" padding-top: 10px; padding-bottom: 17px;">
+             <a href="/" style="text-decoration: none; color: white;">  <i class="material-icons" style="font-size: 50px;">home</i></a>
+           </div>
+         </div>
+       </div>
+       <div class="show-code" style="overflow-x: scroll;">
+         <script src="/assets/prism.js"></script>
+         <pre>
+           <code class="language-JSON">
+             <%= data %>
+           </code>
+         </pre>
+       </div>
+     </div>
+
+
+     <!-- Compiled and minified JavaScript -->
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
+
+   </body>
+ </html>

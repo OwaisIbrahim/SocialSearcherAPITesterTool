@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!--Import Google Icon Font-->
+  <title>The Materialize Form Example</title>
+  <meta name="viewport" content="width = device-width, initial-scale = 1">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js">
+  </script>
+
+  <script>
+    $(document).ready(function() {
+      $('select').material_select();
+    });
+  </script>
+  <link rel="stylesheet" href="/assets/styles.css">
+
+  <!--Let browser know website is optimized for mobile-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+
+<body>
+
+  <% include partials/nav.ejs %>
+
+  <div class="content">
+    <section id="search" class="section section-search teal darken-1 white-text center scrollspy">
+      <div class="container">
+        <div class="row">
+          <form class="col s12" method="post" action="/socialsearcherAPI">
+            <div class="row">
+              <div class="col s12">
+                <h3>Search</h3>
+                <div class="input-field">
+                  <input type="text" name="query" class="query white grey-text autocomplete" id="autocomplete-input" placeholder="Iphone, Apple, etc" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="input-field col s12" id="platform_available">
+                <input type="checkbox" name="editList" id="twitter_option" value="twitter" onclick="update_block('twitter', $(this));" checked/>
+                <label for="twitter_option" class="white-text radio-label">Twitter</label>
+
+                <input type="checkbox" name="editList" id="youtube_option" value="youtube" onclick="update_block('youtube', $(this));" />
+                <label for="youtube_option" class="white-text radio-label">Youtube</label>
+
+                <input type="checkbox" name="editList" id="googleplus_option" value="googleplus" onclick="update_block('googleplus', $(this));" />
+                <label for="googleplus_option" class="white-text radio-label">Google+</label>
+
+                <input type="checkbox" name="editList" id="vimeo_option" value="vimeo" onclick="update_block('vimeo', $(this));" />
+                <label for="vimeo_option" class="white-text radio-label">Vimeo</label>
+
+                <input type="checkbox" name="editList" id="dailymotion_option" value="dailymotion" onclick="update_block('dailymotion', $(this));" />
+                <label for="dailymotion_option" class="white-text radio-label">Dailymotion</label>
+
+                <input type="checkbox" name="editList" id="flickr_option" value="flickr" onclick="update_block('flickr', $(this));"/>
+                <label for="flickr_option" class="white-text radio-label">Flickr</label>
+
+                <input type="checkbox" name="editList" id="tumblr_option" value="tumblr" onclick="update_block('tumblr', $(this));" />
+                <label for="tumblr_option" class="white-text radio-label">Tumblr</label>
+
+                <input type="checkbox" name="editList" id="facebook_option" value="facebook" onclick="update_block('facebook', $(this));" disabled/>
+                <label for="facebook_option" class="white-text radio-label">Facebook</label>
+
+                <input type="checkbox" name="editList" id="instagram_option" value="instagram" onclick="update_block('instagram', $(this));" disabled/>
+                <label for="instagram_option" class="white-text radio-label">Instagram</label>
+
+              </div>
+            </div>
+            <div class="row" id="available_blocks">
+              <div class=" col s12 teal lignten-1" id="block" >
+                <div class="row">
+                  <div class="col s12 center">
+                    <h3 style="border-bottom: solid; border-color: #e0e0e0">Options</h3>
+                  </div>
+                </div>
+                <div class="input-field col s12 m6 l3">
+                  <input placeholder="15" name="maxResults" id="maxResults" type="number" class="active validate" />
+                  <label for="maxResults" class="white-text">maxResults</label>
+                </div>
+                <div class="col s12 m6 l3">
+                  <label class="left white-text">Result Type</label>
+                  <select name="tw_result_type">
+                    <option value="" disabled selected>Select Type</option>
+                    <option name="mixed" value="mixed">Mixed</option>
+                    <option name="recent" value="recent">Recent</option>
+                    <option name="popular" value="popular">Popular</option>
+                  </select>
+                </div>
+              </div>
+
+              
+              
+            </div>
+            <div class="col s12">
+              <button class="btn-large waves-effect teal lighten-1 col s12 " id="submit_btn" type="submit" onclick="showLoader()">Submit
+                  <i class="material-icons right">play_arrow</i>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <div class = "row">
+     <div class = "col s12">
+       <ul class = "tabs">
+        <li id="twitter_tab" class = "tab col s3"><a href = "#twitter_card">Twitter</a></li>
+        <li id="youtube_tab" class = "tab col s3"><a href = "#youtube_card">Youtube</a></li>
+        <li id="googleplus_tab" class = "tab col s3"><a href = "#googleplus_card">Google Plus</a></li>
+        <li id="vimeo_tab" class = "tab col s3"><a href = "#vimeo_card">Vimeo</a></li>
+        <li id="dailymotion_tab" class = "tab col s3"><a href = "#dailymotion_card">Dailymotion</a></li>
+        <li id="flickr_tab" class = "tab col s3"><a href = "#flickr_card">Flikr</a></li>
+        <li id="tumblr_tab" class = "tab col s3"><a href = "#tumblr_card">Tumblr</a></li>
+       </ul>
+     </div>
+   </div>
+
+    <section id="result">
+      <section id="twitter_card" class="teal lighten-2">
+        <div class="container">
+          <div id="card-format">
+            <% if (typeof twitter_data !== 'undefined' && twitter_data && twitter_data_type == 'twitter') {%>
+              <div class="row">
+                <% if (twitter_data.statuses) { %>
+                  <% for (var i=0; i< twitter_data.statuses.length; i++) { %>
+                    <% if (twitter_data.statuses[i].user) { %>
+                      <div class="col s12 m12 l6">
+                        <div class="card z-depth-3">
+                          <div class="card-content">
+                            <div class="row">
+                              <div class="col s12 m6 profile_details">
+                                <div class="col s4 center-align">
+                                  <img src="<%= twitter_data.statuses[i].user.profile_image_url %>" alt="" class="circle responsive-img">
+                                </div>
+                                <div class="col s8 ">
+                                  <h5 class="title" style="margin-bottom: 0px;"><%= twitter_data.statuses[i].user.name %></h5>
+                                  <small><%= twitter_data.statuses[i].user.screen_name %></small>
+                                </div>
+                              </div>
+                              <div class="col s12 m6 account_details right-align">
+                                <div class="col s4 center-align">
+                                  <span>Tweets</br></span>
+                                  <span style="color: green"><b><%= twitter_data.statuses[i].user.statuses_count %></b></span>
+                                </div>
+                                <div class="col s4 center-align">
+                                  <span>Following</br></span>
+                                  <span style="color: green"><b><%= twitter_data.statuses[i].user.friends_count %></b></span>
+                                </div>
+                                <div class="col s4 center-align">
+                                  <span>Followers</br></span>
+                                  <span style="color: green"><b><%= twitter_data.statuses[i].user.followers_count %></b></span>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="divider"></div>
+                            <blockquote >
+                              <%= twitter_data.statuses[i].full_text %>
+                            </blockquote>
+                            <div class="row">
+                              <div class="col s12 m12 post_details">
+                                <div class="col m6 s12 center-align teal lighten-1" style="padding: 10px; color: white; border-color: white; border-style: double;">
+                                  <p>Favorites: <b><%= twitter_data.statuses[i].favorite_count %></b></p>
+                                </div>
+                                <div class="col m6 s12 center-align teal lighten-1" style="padding: 10px; color: white; border-color: white; border-style: double;">
+                                  <p>Retweeets: <b><%= twitter_data.statuses[i].retweet_count %></b></p>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="divider"></div>
+                            <div class="extras">
+                              <div class="row">
+                                <% if (twitter_data.statuses[i].entities.hashtags) {%>
+                                  <div class="col s12 m12">
+                                    <div id="tag-items">
+                                      <ul>
+                                        <% for (var j=0; j < twitter_data.statuses[i].entities.hashtags.length; j++) {%>
+                                          <li><b>#</b><i><%= twitter_data.statuses[i].entities.hashtags[j].text %></i></li>
+                                        <% } %>
+                                      </ul>
+                                    </div>
+                                  </div>
+                                <% } %>
+                                <% if (twitter_data.statuses[i].entities.urls) {%>
+                                  <div class="col s12 m12">
+                                    <ul>
+                                      <% for (var j=0; j < twitter_data.statuses[i].entities.urls.length; j++) {%>
+                                        <li>
+                                          <a href="<%= twitter_data.statuses[i].entities.urls[j].expanded_url %>">
+                                            <%= twitter_data.statuses[i].entities.urls[j].display_url %>
+                                          </a>
+                                        </li>
+                                        <% } %>
+                                    </ul>
+                                  </div>
+                                <% } %>
+                                <div class="col s12">
+                                  <p>
+                                    <%= twitter_data.statuses[i].created_at %>
+                                  </p>
+                                </div>
+                                <div class="col s12 teal center" style="padding: 10px;">
+                                  <a class="white-text" style="text-decoration: none" width: "100%;" target="_blank" href="<%= "https://twitter.com/statuses/"+twitter_data.statuses[i].id_str  %>">GO TO TWEET</a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    <% } %>
+                  <% } %>
+                <% } %>
+              </div>
+              <% } else {%>
+                <h1 class="center">Twitter is not selected</h1>
+              <% } %>
+          </div>
+        </div>
+      </section>
+      <section id="youtube_card" class="teal lighten-2">
+        <div class="container">
+          <div id="card-format">
+            <% if (typeof youtube_data !== 'undefined' && youtube_data && youtube_data_type == 'youtube') {%>
+              <div class="row">
+                  <% for (var i=0; i< youtube_data.length; i++) { %>
+                      <div class="col s12 m12 l6">
+                        <div class="card z-depth-3">
+                          <div class="card-content">
+                            <div class="row teal">
+                              <div class="col s12 center white-text">
+                                <h5 class="title"><%=youtube_data[i].snippet.channelTitle%></h5>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col s12">
+                                <iframe style="width: 100%" height="349" allowfullscreen="allowfullscreen"
+                                  src=" <%= 'https://www.youtube.com/embed/'+youtube_data[i].id.videoId  %> ">
+                                </iframe>
+                                <a href="<%= 'https://www.youtube.com/embed/'+youtube_data[i].id.videoId  %>" target="_blank"><p><b>Created At: </b><i><%=youtube_data[i].snippet.publishedAt%></i></p></a>
+                              </div>
+                            </div>
+                            <div class="divider"></div>
+                            <blockquote style="line-height: 1.3em; height: 3em">
+                              <%= youtube_data[i].snippet.description %>
+                            </blockquote>
+                          </div>
+                        </div>
+                      </div>
+                  <% } %>
+              </div>
+            <% } else {%>
+              <h1 class="center">Youtube is not selected</h1>
+            <% } %>
+          </div>
+        </div>
+      </section>
+      <section id="vimeo_card" class="teal lighten-2">
+        <div class="container">
+          <div id="card-format">
+            <% if (typeof vimeo_data !== 'undefined' && vimeo_data && vimeo_data_type == 'vimeo') {%>
+              <div class="row">
+                  <% for (var i=0; i< vimeo_data.length; i++) { %>
+                      <div class="col s12 m12 l6">
+                        <div class="card z-depth-3">
+                          <div class="card-content">
+                            <div class="row teal">
+                              <div class="col s12 center white-text">
+                                <h5 class="title"><%=vimeo_data[i].user.name%></h5>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div id="vimeo_video" class="col s12">
+                                <%- vimeo_data[i].embed.html %>
+                                <p><b>Created At: </b><i><%=vimeo_data[i].created_time%></i></p>
+                              </div>
+                            </div>
+                            <div class="divider"></div>
+                            <!-- <blockquote style=" overflow-y: scroll; line-height: 1.3em; height: 4.5em "> -->
+                            <blockquote>
+                              <%= vimeo_data[i].description %>.
+                            </blockquote>
+                          </div>
+                        </div>
+                      </div>
+                  <% } %>
+              </div>
+            <% } else {%>
+              <h1>Vimeo is not selected</h1>
+            <% } %>
+          </div>
+        </div>
+      </section>
+      
+
+
+      <section id="dailymotion_card" class="teal lighten-2">
+        <div class="container">
+          <div id="card-format">
+            <% if (typeof dailymotion_data !== 'undefined' && dailymotion_data && dailymotion_data_type == 'dailymotion') {%>
+              <div class="row">
+                  <% for (var i=0; i< dailymotion_data.length; i++) { %>
+                      <div class="col s12 m12 l6">
+                        <div class="card z-depth-3">
+                          <div class="card-content">
+                            <div class="row teal">
+                              <div class="col s12 center white-text">
+                                <h5 class="title"><%=dailymotion_data[i].title%></h5>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div id="vimeo_video" class="col s12">
+                                <%- dailymotion_data[i].embed_html %>
+                                <p><b>Created At: </b><i><%=dailymotion_data[i].created_time%></i></p>
+                              </div>
+                            </div>
+                            <div class="divider"></div>
+                            <!-- <blockquote style=" overflow-y: scroll; line-height: 1.3em; height: 4.5em "> -->
+                            <blockquote>
+                              <%= dailymotion_data[i].description %>
+                            </blockquote>
+                          </div>
+                        </div>
+                      </div>
+                  <% } %>
+              </div>
+            <% } else {%>
+              <h1>Dailymotion is not selected</h1>
+            <% } %>
+          </div>
+        </div>
+      </section>
+
+
+
+      <section id="googleplus_card" class="teal lighten-2">
+        <div class="container">
+          <div id="card-format">
+            <% if (typeof googleplus_data !== 'undefined' && googleplus_data && googleplus_data_type == 'googleplus') {%>
+              <div class="row">
+                <% for (var i=0; i< googleplus_data.length; i++) { %>
+                    <div class="col s12 m12 l6">
+                      <div class="card z-depth-3">
+                        <div class="card-content">
+                          <div class="row">
+                            <div class="col s12 m6 profile_details">
+                              <div class="col s4 center-align">
+                                <img src="<%= googleplus_data[i].actor.image.url %>" alt="" class="circle responsive-img">
+                              </div>
+                              <div class="col s8 ">
+                                <h5 class="title" style="margin-bottom: 0px;"><a href="<%= googleplus_data[i].actor.url %>" target="_blank"><%= googleplus_data[i].actor.displayName %></a></h5>
+                                <small><%= googleplus_data[i].access.description %></small>
+                              </div>
+                            </div>
+                            <div class="col s12 m6 account_details right-align">
+                              <div class="col s12 right-align">
+                                <span>Published At:</br></span>
+                                <span style="color: green"><a href="<%= googleplus_data[i].url %>" target="_blank"><b><%= googleplus_data[i].published %></b></a></span>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="divider"></div>
+                          <blockquote id="content">
+                            <%- googleplus_data[i].object.content %>
+                            <!-- <script type="text/javascript">
+                              function parseHTML(html) {
+                                var t = document.createElement('template');
+                                t.innerHTML = html;
+                                return t.content.cloneNode(true);
+                              }
+                              parseHTML( <%= googleplus_data[i].object.content %> );
+                            </script> -->
+                          </blockquote>
+                          <div class="row">
+                            <div class="col s12 m12 post_details">
+                              <div class="col m4 s12 center-align teal lighten-1" style="padding: 10px; color: white; border-color: white; border-style: double;">
+                                <p>Replies: <b><%= googleplus_data[i].object.replies.totalItems %></b></p>
+                              </div>
+                              <div class="col m4 s12 center-align teal lighten-1" style="padding: 10px; color: white; border-color: white; border-style: double;">
+                                <p>Plusners: <b><%= googleplus_data[i].object.plusoners.totalItems %></b></p>
+                              </div>
+                              <div class="col m4 s12 center-align teal lighten-1" style="padding: 10px; color: white; border-color: white; border-style: double;">
+                                <p>Reshares: <b><%= googleplus_data[i].object.resharers.totalItems %></b></p>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="divider"></div>
+                          <% if(googleplus_data[i].object.attachments) { %>
+                          <div class="row">
+                            <a href="<%= googleplus_data[i].object.attachments[0].url %>">
+                              <div class="row">
+                                <div class="col s12" style="margin: 10px; border: solid none solid none;">
+                                  <h5 class="grey-text"><%= googleplus_data[i].object.attachments[0].displayName %></h5>
+                                </div>
+                                <div class="col s12">
+                                  <% if( googleplus_data[i].object.attachments[0].objectType == 'album' ) { %>
+                                    <% for( var j=0; j < googleplus_data[i].object.attachments[0].thumbnails.length; j++ ) { %>
+                                      <div class="col s6">
+                                        <img src="<%= googleplus_data[i].object.attachments[0].thumbnails[j].image.url %>" style="width: 100%;  height: 15vw;" alt="Image">
+                                      </div>
+                                    <% } %>
+                                  <% } else {%>
+                                    <% if(googleplus_data[i].object.attachments[0].image) { %>
+                                      <div class="col s12">
+                                        <img src="<%= googleplus_data[i].object.attachments[0].image.url %>" style="width: 100%;  height: 15vw;" alt="Image">
+                                      </div>
+                                    <% } %>
+                                  <% } %>
+                                </div>
+                              </div>
+                            </a>
+                          </div>
+                          <% } %>
+                        </div>
+                      </div>
+                    </div>
+                <% } %>
+              </div>
+            <% } else {%>
+              <h1 class="center">GooglePlus is not selected</h1>
+            <% } %>
+          </div>
+        </div>
+      </section>
+      <section id="flickr_card" class="teal lighten-2">
+        <div class="container">
+          <div id="card-format">
+            <% if (typeof flickr_data !== 'undefined' && flickr_data && flickr_data_type == 'flickr') {%>
+              <div class="row">
+                  <% for (var i=0; i< flickr_data.length; i++) { %>
+                      <div class="col s12 m12 l6">
+                        <div class="card z-depth-3">
+                          <div class="card-content">
+                            <div class="row teal">
+                              <div class="col s12 center white-text">
+                                <h5 class="title"><%=flickr_data[i].title%></h5>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col s12">
+                                <img src=" <%= '//farm'+flickr_data[i].farm+'.staticflickr.com/'+flickr_data[i].server+'/'+flickr_data[i].id+'_'+flickr_data[i].secret+'.jpg' %>  " style="width: 100%;  height: 349;" alt="Image">
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                  <% } %>
+              </div>
+            <% } else {%>
+              <h1 class="center">Flickr is not selected</h1>
+            <% } %>
+          </div>
+        </div>
+      </section>
+      <section id="tumblr_card" class="teal lighten-2">
+        <div class="container">
+          <div id="card-format">
+            <% if (typeof tumblr_data !== 'undefined' && tumblr_data && tumblr_data_type == 'tumblr') {%>
+              <div class="row">
+                  <% for (var i=0; i< tumblr_data.length; i++) { %>
+                      <div class="col s12 m12 l12">
+                        <div class="card z-depth-3">
+                          <div class="card-content">
+                            <div class="row teal">
+                              <div class="col s12 center white-text">
+                                <h5 class="title" style="margin-bottom: 0px;"><a href="<%= tumblr_data[i].short_url %>" style="text-decoration: none; color: white;"><%= tumblr_data[i].blog_name %></a></h5>
+                              </div>
+                              <div class="col s12 center white-text">
+                                <p style="padding: 5px;"><b>Slugen:</b><i> <%= tumblr_data[i].slug %></i></p>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col s12">
+                                <h4 style="padding: 10px;"><%= tumblr_data[i].title %></h4>
+                                <% if(tumblr_data[i].type == 'text') { %>
+                                  <%- tumblr_data[i].body %>
+                                <% } else if(tumblr_data[i].type == 'link') {%>
+                                  <!-- <blockquote style=" overflow-y: scroll; line-height: 1.3em; height: 4.5em "> -->
+                                  <blockquote>
+                                    <%= tumblr_data[i].excerpt %>
+                                  </blockquote>
+                                  <%- tumblr_data[i].description %>
+                                  <p class="grey-text" style="overflow-x: scroll; width: 100%;">Publisher:   <%= tumblr_data[i].publisher %></p>
+                                <% } else if(tumblr_data[i].type == 'photo') { %>
+                                  <p><i><%= tumblr_data[i].photos[0].caption %></i></p>
+
+                                  <img src="<%= tumblr_data[i].photos[0].original_size.url %>" style="width: 100%;  height: 100%;" alt="Image">
+                                  <%= tumblr_data[i].caption %>
+                                <% } %>
+                                <p><b>Created At: </b><i><%= tumblr_data[i].date %></i></p>
+                              </div>
+                            </div>
+                            <div class="divider"></div>
+                            <!-- <blockquote style=" overflow-y: scroll; line-height: 1.3em; height: 4.5em "> -->
+                            <blockquote>
+                              <div id="tag-items">
+                                <ul>
+                                  <% for (var j=0; j< tumblr_data[i].tags.length; j++) { %>
+                                    <li><b>#</b><i><%= tumblr_data[i].tags[j] %></i></li>
+                                  <% } %>
+                                </ul>
+                              </div>
+                            </blockquote>
+                          </div>
+                        </div>
+                      </div>
+                  <% } %>
+              </div>
+            <% } else {%>
+              <h1 class="center">Tumblr is not selected</h1>
+            <% } %>
+          </div>
+        </div>
+      </section>
+
+    </section>
+
+  </div>
+
+  <div id="spinner">
+    <div id="spinner-wrapper">
+      <img src="/assets/spinner.gif" class="img-spinner" alt="Loading..." style="background: transparent;">
+    </div>
+  </div>
+
+
+
+  <script src="/assets/javascript.js"></script>
+
+  <script >
+    var str = "{{ googleplus_data[i].object.content }}";
+    console.log(str);
+  </script>
+</body>
+
+</html>
